@@ -4,6 +4,6 @@ namespace InventoryImporter.Interfaces
 {
     public interface IParser
     {
-        ItemDto Parse(string data);
+        InventoryItemDto Parse(string data);
     }
 }

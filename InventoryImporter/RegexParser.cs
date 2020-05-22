@@ -10,9 +10,9 @@ namespace InventoryImporter
         private Regex _regex = new Regex(@"^(?<name>[^;]+);(?<id>[^;]+);(?<availability>[^,]+,\d+[|]?)+$");
         private Regex _availability = new Regex(@"^(?<warehouse>[^,]+),(?<quantity>\d+)[|]?$");
 
-        public ItemDto Parse(string data)
+        public InventoryItemDto Parse(string data)
         {
-            ItemDto result = null;
+            InventoryItemDto result = null;
 
             if (string.IsNullOrWhiteSpace(data))
             {
@@ -22,7 +22,7 @@ namespace InventoryImporter
             var match = _regex.Match(data);
             if (match.Success)
             {
-                result = new ItemDto();
+                result = new InventoryItemDto();
                 result.Name = match.Groups["name"].Value;
                 result.Id = match.Groups["id"].Value;
 

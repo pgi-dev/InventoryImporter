@@ -2,13 +2,13 @@
 
 namespace Inventory.Domain.Dto
 {
-    public class ItemDto
+    public class InventoryItemDto
     {
         public string Id{ get; set; }
         public string Name { get; set; }
         public List<AvailabilityDto> Availabilities { get; set; }
 
-        public ItemDto()
+        public InventoryItemDto()
         {
             Availabilities = new List<AvailabilityDto>();
         }
