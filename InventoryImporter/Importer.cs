@@ -11,10 +11,6 @@ namespace InventoryImporter
         private readonly IParser parser;
         private readonly IRepository repository;
 
-        private int recordsTotal;
-        private int recordFailed;
-        private int recordSucceeded;
-
         public Importer(IDataProvider dataProvider, IParser parser, IRepository repository)
         {
             this.dataProvider = dataProvider;
@@ -24,11 +20,32 @@ namespace InventoryImporter
 
         public async Task<ImportResult> Import(string uri)
         {
+            int recordsTotal = 0, recordFailed = 0, recordSucceeded = 0;
+
+            EventHandler<string> handler = async (sender, e) =>
+            {
+                if (e.StartsWith("#") || string.IsNullOrWhiteSpace(e))
+                {
+                    return;
+                }
+
+                recordsTotal++;
+
+                var itemDto = parser.Parse(e);
+                if (itemDto != null)
+                {
+                    recordSucceeded++;
+                    await repository.Add(itemDto);
+                }
+                else
+                {
+                    recordFailed++;
+                }
+            };
+
             try
             {
-                recordsTotal = recordFailed = recordSucceeded = 0;
-
-                dataProvider.LineRead += DataProvider_LineRead;
+                dataProvider.LineRead += handler;
                 await dataProvider.ProcessData(uri);
 
                 return new ImportResult
@@ -47,28 +64,7 @@ namespace InventoryImporter
             }
             finally
             {
-                dataProvider.LineRead -= DataProvider_LineRead;
-            }
-        }
-
-        private async void DataProvider_LineRead(object sender, string e)
-        {
-            if(e.StartsWith("#") || string.IsNullOrWhiteSpace(e))
-            {
-                return;
-            }
-
-            recordsTotal++;
-
-            var itemDto = parser.Parse(e);
-            if (itemDto != null)
-            {
-                recordSucceeded++;
-                await repository.Add(itemDto);
-            }
-            else
-            {
-                recordFailed++;
+                dataProvider.LineRead -= handler;
             }
         }
     }
