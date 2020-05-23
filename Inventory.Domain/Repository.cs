@@ -8,7 +8,7 @@ namespace Inventory.Domain
 {
     public interface IRepository
     {
-        Task Add(InventoryItemDto item);
+        Task AddInventoryItem(InventoryItemDto item);
         void Truncate();
         string DumpContent();
     }
@@ -22,7 +22,7 @@ namespace Inventory.Domain
             this.context = context;
         }
 
-        public Task Add(InventoryItemDto item)
+        public Task AddInventoryItem(InventoryItemDto item)
         {
             foreach (var availability in item.Availabilities)
             {

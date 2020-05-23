@@ -35,7 +35,7 @@ namespace InventoryImporter
                 if (itemDto != null)
                 {
                     recordSucceeded++;
-                    await repository.Add(itemDto);
+                    await repository.AddInventoryItem(itemDto);
                 }
                 else
                 {
