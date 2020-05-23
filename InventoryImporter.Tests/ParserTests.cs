@@ -43,13 +43,13 @@ namespace Tests
         [TestCase("ItemName;ItemId;W1,")]
         [TestCase("ItemName;ItemId;||")]
         [TestCase("ItemName;ItemId;,|,|,")]
-        public void Parse_When_InputIsIncorrect_Returns_Null(string validInput)
+        public void Parse_When_InputIsIncorrect_Returns_Null(string invalidInput)
         {
             // Arrange
             IParser parser = new RegexParser();
 
             // Act
-            var result = parser.Parse(validInput);
+            var result = parser.Parse(invalidInput);
 
             // Assert
             Assert.IsNull(result, "Result is not null");
